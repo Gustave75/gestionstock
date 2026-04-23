@@ -1,0 +1,32 @@
+name: Deploy GestionStock sur Azure
+
+on:
+  push:
+    branches:
+      - main  # Se déclenche à chaque push sur main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupérer le code
+      - name: Checkout du code
+        uses: actions/checkout@v3
+
+      # 2. Se connecter à Azure Container Registry
+      - name: Connexion à Azure Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: gestionstockregistry.azurecr.io
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      # 3. Construire et pousser l'image Docker
+      # → Azure App Service se redéploie automatiquement via le webhook ACR
+      - name: Build et Push de l'image Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: gestionstockregistry.azurecr.io/gestionstock:v1
