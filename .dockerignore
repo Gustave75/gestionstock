@@ -1,0 +1,10 @@
+# Fichiers à NE PAS inclure dans l'image Docker
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv
+venv/
+.git/
+.gitignore
+*.md
